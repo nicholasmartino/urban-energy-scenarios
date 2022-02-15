@@ -56,7 +56,7 @@ RENAME = {
 	"RS_MF_H": "MFH"
 }
 
-# Colors
+# Colors (RGB)
 LAND_USE = {
 	"SFD": [255, 248, 165],
 	"SFA": [240, 220, 33],
