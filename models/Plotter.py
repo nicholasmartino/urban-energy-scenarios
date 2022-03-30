@@ -8,7 +8,7 @@ import pandas as pd
 import plotly.express as px
 from shapely import geometry
 import seaborn as sns
-from models.Estimator import pct_change
+from models.Estimator import Estimator, pct_change
 from store import template, land_use_cdm, energy_cdm, emissions_cdm, proximity_cdm
 
 
@@ -179,23 +179,28 @@ class Plotter:
 			d2_df.loc[i, 'theta'] = f'{col}_400'
 		return px.line_polar(d2_df, r='r', theta='theta', range_r=[0.2, 1], line_close=True, template=template)
 
-	def plot_proximity(self, radius=600):
+	def plot_proximity(self):
+		# if self.experiment != 'E0':
+			# df = self.df.copy()
+			# chg_df = pd.DataFrame()
+			# for col in ['d2os', 'd2cv', 'd2cm', 'd2bk', 'd2tr']:
+			# 	if col not in df.columns:
+			# 		df[col] = 0.05
+			# 	i = len(chg_df)
+			# 	# Get % of residents within 400m of each land use in the baseline
+			# 	baseline = len(df[(df['experiment'] == 'E0') & (df['city'] == self.city) & (df[col] <= radius)])/len(df)
+			# 	# Get % of residents within 400m of each land use in the scenario
+			# 	scenario = len(df[(df['experiment'] == self.experiment) & (df['city'] == self.city) & (df[col] <= radius)])/len(df)
+			# 	chg_df.loc[i, 'use'] = col
+			# 	chg_df.loc[i, 'change'] = pct_change(baseline, scenario)
+			# chg_df = chg_df.replace({'d2os': 'Open', 'd2cv': 'Civic', 'd2cm': 'Comm.', 'd2bk': 'Bike', 'd2tr': 'Transit'})
+			# chg_df['change_sf'] = [f"{i}%" for i in chg_df['change']]
+			# chg_df[''] = chg_df['use']
+
 		if self.experiment != 'E0':
-			df = self.df.copy()
-			chg_df = pd.DataFrame()
-			for col in ['d2os', 'd2cv', 'd2cm', 'd2bk', 'd2tr']:
-				if col not in df.columns:
-					df[col] = 0.05
-				i = len(chg_df)
-				# Get % of residents within 400m of each land use in the baseline
-				baseline = len(df[(df['experiment'] == 'E0') & (df['city'] == self.city) & (df[col] <= radius)])/len(df)
-				# Get % of residents within 400m of each land use in the scenario
-				scenario = len(df[(df['experiment'] == self.experiment) & (df['city'] == self.city) & (df[col] <= radius)])/len(df)
-				chg_df.loc[i, 'use'] = col
-				chg_df.loc[i, 'change'] = pct_change(baseline, scenario)
-			chg_df = chg_df.replace({'d2os': 'Open', 'd2cv': 'Civic', 'd2cm': 'Comm.', 'd2bk': 'Bike', 'd2tr': 'Transit'})
-			chg_df['change_sf'] = [f"{i}%" for i in chg_df['change']]
-			chg_df[''] = chg_df['use']
+			estimator = Estimator(self.df.copy(), self.city, self.experiment)
+			chg_df = estimator.get_change_proximity()
+
 			fig = px.bar(
 				chg_df, x='', y='change', template=template, title="Proximity, % of buildings in 400m of:",
 				range_y=[-15, 15], text="change_sf", color_discrete_map=proximity_cdm, color='use'

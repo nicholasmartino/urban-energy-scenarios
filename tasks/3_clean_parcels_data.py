@@ -40,6 +40,8 @@ for city, experiments in PARCELS.items():
 			.sjoin(exp_pcl)\
 			.groupby('bld_id')\
 			.first()['pcl_id']
+
+# Export files
 bld_gdf.to_file(f'{DIRECTORY}/buildings.shp')
 gdfs.loc[:, [
 	'pcl_id', 'city', 'experiment', 'exp_name', 'area', 'floor_area', 'fsr', 'geometry'

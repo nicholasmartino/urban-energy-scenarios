@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 
 
@@ -42,6 +43,29 @@ class Estimator:
 			baseline = df.loc[(df['experiment'] == 'E0') & (df['city'] == self.city), 'res_count'].sum()
 			scenario = df.loc[(df['experiment'] == self.experiment) & (df['city'] == self.city), 'res_count'].sum()
 			return pct_change(baseline, scenario)
+
+	def get_change_proximity(self, radius=600):
+		if self.experiment != 'E0':
+			df = self.df.copy()
+			chg_df = pd.DataFrame()
+			for col in ['d2os', 'd2cv', 'd2cm', 'd2bk', 'd2tr']:
+				if col not in df.columns:
+					df[col] = 0.05
+				i = len(chg_df)
+				# Get % of residents within 400m of each land use in the baseline
+				baseline = len(df[(df['experiment'] == 'E0') & (df['city'] == self.city) & (df[col] <= radius)]) / len(
+					df)
+				# Get % of residents within 400m of each land use in the scenario
+				scenario = len(
+					df[(df['experiment'] == self.experiment) & (df['city'] == self.city) & (df[col] <= radius)]) / len(
+					df)
+				chg_df.loc[i, 'use'] = col
+				chg_df.loc[i, 'change'] = pct_change(baseline, scenario)
+			chg_df = chg_df.replace(
+				{'d2os': 'Open', 'd2cv': 'Civic', 'd2cm': 'Comm.', 'd2bk': 'Bike', 'd2tr': 'Transit'})
+			chg_df['change_sf'] = [f"{i}%" for i in chg_df['change']]
+			chg_df[''] = chg_df['use']
+			return chg_df
 
 	def get_total_residents(self):
 		return int(self.df[(self.df['experiment'] == self.experiment) & (self.df['city'] == self.city)]['res_count'].sum())

@@ -47,7 +47,11 @@ COLUMN_DESCRIPTIONS = {
 	"em_eqp_t": "Emissions from Equipments (tCO2)",
 	"em_dhw_t": "Emissions from Domestic Hot Water (tCO2)",
 	"em_lgt_t": "Emissions from Lighting (tCO2)",
-	"ann_em_t": "Total Annual Emissions"
+	"ann_em_t": "Total Annual Emissions",
+	"walk": "% Walk Commuters",
+	"bike": "% Cycling Commuters",
+	"transit": "% Transit Commuters",
+	"drive": "% Car Commuters"
 }
 RENAME = {
 	"RS_SF_D": "SFD",
@@ -83,10 +87,16 @@ PROXIMITY = {
 	"Bike": [240, 180, 0],
 	"Transit": [150, 172, 190]
 }
+MOBILITY = {
+	'walk': [180, 210, 180],  # Greens
+	'bike': [240, 180, 0],  # Oranges
+	'transit': [150, 172, 190],  # Blues
+	'drive': [200, 90, 90]  # Reds
+}
 
 # Explorer
 DIRECTORY = "/Volumes/SALA/Research/eLabs/50_projects/22_ESRI_Dashboard/Data"
-BUILDINGS_FILE = "buildings_20220203"
+BUILDINGS_FILE = "buildings.shp"
 
 # Machine learning
 DEPENDENT = [
@@ -112,12 +122,114 @@ EXPLANATORY = [
 ]
 
 # GeoDatabase layers
+NEIGHBOURHOODS = {
+	"Prince George": "West Bowl",
+	"Vancouver": "Sunset",
+	"Victoria": "Hillside Quadra",
+}
+LAYERS = {
+	"Prince George": {
+		"E0": {
+			"Strategy": "Baseline",
+			"Roads": "s_200107_cc_E0_2020_ROADS",
+			"Transit": "s_200214_cc_E0_2020_TRANSIT",
+			"Parcels": "s_200108_cc_E0_2020_PRCLS",
+			"Buildings": "s_200326_jk_udes_E0_2020_BLDGS",
+		},
+		"E7": {
+			"Strategy": "Prevailing Policy",
+			"Roads": "s_200107_cc_E0_2020_ROADS",
+			"Transit": "s_200225_cc_AT_2050_TRANSIT",
+			"Parcels": "s_200117_cc_E7_2050_PPOLICY_PRCLS",
+			"Buildings": "s_200316_jk_E7_2050_PPOLICY_BLDGS_tech_shell",
+
+		},
+		"E5": {
+			"Strategy": "Neighbourhood Center",
+			"Roads": "s_200214_cc_AT_2050_ROADS",
+			"Transit": "s_200225_cc_AT_2050_TRANSIT",
+			"Parcels": "c_200114_E5_2050_FOCUS_PRCLS_polygons2",
+			"Buildings": "s_200316_jk_E5_2050_NC_FOCUS_BLDGS_tech_shell"
+		},
+		"E6": {
+			"Strategy": "Corridor",
+			"Roads": "s_200214_cc_AT_2050_ROADS",
+			"Transit": "s_200225_cc_AT_2050_TRANSIT",
+			"Parcels": "s_200210_cc_E6_2050_COR_FOCUS_PRCLS",
+			"Buildings": "s_200316_jk_E6_2050_COR_FOCUS_BLDGS_tech_shell"
+		}
+	},
+	"Vancouver": {
+		"E0": {
+			"Strategy": "Baseline",
+			"Roads": "E0_streets",
+			"Transit": "E0_streets",
+			"Parcels": "E0_2020_PRCLS",
+			"Buildings": "E0_2020_bldgs",
+		},
+		"E3": {
+			"Strategy": "Dispersed",
+			"Roads": "E0_streets",
+			"Transit": "E0_streets",
+			"Parcels": "E3_2040_D_PRCLS",
+			"Buildings": "E3_2040_D_bldgs",
+		},
+		"E5": {
+			"Strategy": "Corridor",
+			"Roads": "E0_streets",
+			"Transit": "E0_streets",
+			"Parcels": "E4_2040_COR_A_PRCLS",
+			"Buildings": "E5_2040_COR_B_bldgs",
+		},
+		"E6": {
+			"Strategy": "Transit-Oriented Development",
+			"Roads": "E0_streets",
+			"Transit": "E0_streets",
+			"Parcels": "E6_2040_TOD_B_PRCLS",
+			"Buildings": "E6_2040_TOD_B_bldgs",
+		},
+	},
+	"Victoria": {
+		"E0": {
+			"Strategy": "Baseline",
+			"Roads": "nm_200612_HQ_E0_2020_STRTS",
+			"Transit": "nm_200612_HQ_E0_2020_INTRS",
+			"Parcels": "s_yl_200619_HQ_E0_2020_PRCLS",
+			"Buildings": "s_jk_200717_HQ_E0_2020_BLDGS_1",
+		},
+		"E1": {
+			"Strategy": "Dispersed",
+			"Roads": "nm_200612_HQ_E0_2020_STRTS",
+			"Transit": "nm_200612_HQ_E0_2020_INTRS",
+			"Parcels": "s_yl_200717_HQ_E1_2040_PRCLS",
+			"Buildings": "s_jk_200808_HQ_E1_2040_BLDGS_1",
+		},
+		"E2": {
+			"Strategy": "Neighbourhood Center",
+			"Roads": "nm_200612_HQ_E0_2020_STRTS",
+			"Transit": "nm_200612_HQ_E0_2020_INTRS",
+			"Parcels": "s_yl_200728_HQ_E2_2040_PRCLS",
+			"Buildings": "s_jk_200816_HQ_E2_2040_BLDGS_1",
+		},
+		"E3": {
+			"Strategy": "Corridor",
+			"Roads": "nm_200612_HQ_E0_2020_STRTS",
+			"Transit": "nm_200612_HQ_E0_2020_INTRS",
+			"Parcels": "s_yl_200729_HQ_E3_2040_PRCLS",
+			"Buildings": "s_jk_200808_HQ_E3_2040_BLDGS_1",
+		}
+	}
+}
+OPEN_SPACES = f"{DIRECTORY}/Open Spaces.gdb"
+
+
+"""
 BUILDINGS = {
 	"Prince George": {
 		"E0": "s_200326_jk_udes_E0_2020_BLDGS",
-		"E1": "s_200316_jk_E7_2050_PPOLICY_BLDGS_tech_shell",
-		"E2": "s_200316_jk_E5_2050_NC_FOCUS_BLDGS_tech_shell",
-		"E3": "s_200316_jk_E6_2050_COR_FOCUS_BLDGS_tech_shell"
+		"E7": "s_200316_jk_E7_2050_PPOLICY_BLDGS_tech_shell",
+		"E5": "s_200316_jk_E5_2050_NC_FOCUS_BLDGS_tech_shell",
+		"E6": "s_200316_jk_E6_2050_COR_FOCUS_BLDGS_tech_shell"
 	},
 	"Vancouver": {
 		"E0": "E0_2020_bldgs",
@@ -140,9 +252,9 @@ BUILDINGS = {
 PARCELS = {
 	"Prince George": {
 		"E0": "s_200108_cc_E0_2020_PRCLS",
-		"E1": "s_200117_cc_E7_2050_PPOLICY_PRCLS",
-		"E2": "c_200114_E5_2050_FOCUS_PRCLS_polygons2",
-		"E3": "s_200210_cc_E6_2050_COR_FOCUS_PRCLS"
+		"E7": "s_200117_cc_E7_2050_PPOLICY_PRCLS",
+		"E5": "c_200114_E5_2050_FOCUS_PRCLS_polygons2",
+		"E6": "s_200210_cc_E6_2050_COR_FOCUS_PRCLS"
 	},
 	"Vancouver": {
 		"E0": "E0_2020_PRCLS",
@@ -157,60 +269,5 @@ PARCELS = {
 		"E3": "s_yl_200729_HQ_E3_2040_PRCLS"
 	}
 }
-NETWORK = {
-	"Prince George": {
-		"E0": {
-			"Roads": "s_200107_cc_E0_2020_ROADS",
-			"Transit": "s_200214_cc_E0_2020_TRANSIT"
-		},
-		"E1": {
-			"Roads": "s_200107_cc_E0_2020_ROADS",
-			"Transit": "s_200225_cc_AT_2050_TRANSIT",
-		},
-		"E2": {
-			"Roads": "s_200214_cc_AT_2050_ROADS",
-			"Transit": "s_200225_cc_AT_2050_TRANSIT",
-		},
-		"E3": {
-			"Roads": "s_200214_cc_AT_2050_ROADS",
-			"Transit": "s_200225_cc_AT_2050_TRANSIT",
-		}
-	},
-	"Vancouver": {
-		"E0": {
-			"Roads": "E0_streets",
-			"Transit": "E0_streets"
-		},
-		"E3": {
-			"Roads": "E0_streets",
-			"Transit": "E0_streets"
-		},
-		"E5": {
-			"Roads": "E0_streets",
-			"Transit": "E0_streets"
-		},
-		"E6": {
-			"Roads": "E0_streets",
-			"Transit": "E0_streets"
-		},
-	},
-	"Victoria": {
-		"E0": {
-			"Roads": "nm_200612_HQ_E0_2020_STRTS",
-			"Transit": "nm_200612_HQ_E0_2020_INTRS"
-		},
-		"E1": {
-			"Roads": "nm_200612_HQ_E0_2020_STRTS",
-			"Transit": "nm_200612_HQ_E0_2020_INTRS"
-		},
-		"E2": {
-			"Roads": "nm_200612_HQ_E0_2020_STRTS",
-			"Transit": "nm_200612_HQ_E0_2020_INTRS"
-		},
-		"E3": {
-			"Roads": "nm_200612_HQ_E0_2020_STRTS",
-			"Transit": "nm_200612_HQ_E0_2020_INTRS"
-		}
-	}
-}
-OPEN_SPACES = f"{DIRECTORY}/Open Spaces.gdb"
+"""
+

@@ -10,8 +10,8 @@ def get_d2use(gdf, land_use):
 
 
 def get_distance_to_bike(gdf, city, experiment):
-	if NETWORK[city][experiment]['Roads'] != '':
-		roads_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=NETWORK[city][experiment]['Roads'])
+	if LAYERS[city][experiment]['Roads'] != '':
+		roads_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=LAYERS[city][experiment]['Roads'])
 		if 'Bikeways' in roads_gdf.columns:
 			bike_uu = roads_gdf[roads_gdf['Bikeways'] == 1].unary_union
 		elif ('cycle_ocp' in roads_gdf.columns) & (experiment == 'E0'):
@@ -25,8 +25,8 @@ def get_distance_to_bike(gdf, city, experiment):
 
 
 def get_distance_to_transit(gdf, city, experiment):
-	if NETWORK[city][experiment]['Transit'] != '':
-		transit_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=NETWORK[city][experiment]['Transit'])
+	if LAYERS[city][experiment]['Transit'] != '':
+		transit_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=LAYERS[city][experiment]['Transit'])
 		if ('bus_2020' in transit_gdf.columns) & (experiment == 'E0'):
 			transit_uu = transit_gdf[transit_gdf['bus_2020'] == 1].unary_union
 		elif 'freqt_2040' in transit_gdf.columns:
