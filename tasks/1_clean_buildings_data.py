@@ -31,16 +31,19 @@ def get_distance_to_bike(gdf, city, experiment):
 def get_distance_to_transit(gdf, city, experiment):
 	if LAYERS[city][experiment]['Transit'] != '':
 		transit_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=LAYERS[city][experiment]['Transit'])
-		transit_gdf.to_file(f'../data/shp/{city}_{experiment}_transit.shp')
 		if ('bus_2020' in transit_gdf.columns) & (experiment == 'E0'):
-			transit_uu = transit_gdf[transit_gdf['bus_2020'] == 1].unary_union
+			transit_gdf = transit_gdf[transit_gdf['bus_2020'] == 1].copy()
+			transit_uu = transit_gdf.unary_union
 		elif 'freqt_2040' in transit_gdf.columns:
-			transit_uu = transit_gdf[transit_gdf['freqt_2040'] == 1].unary_union
+			transit_gdf = transit_gdf[transit_gdf['freqt_2040'] == 1].copy()
+			transit_uu = transit_gdf.unary_union
 		elif 'Transit' in transit_gdf.columns:
-			transit_uu = transit_gdf[transit_gdf['Transit'] == 1].unary_union
+			transit_gdf = transit_gdf[transit_gdf['Transit'] == 1].copy()
+			transit_uu = transit_gdf.unary_union
 		else:
 			transit_uu = transit_gdf.unary_union
 		gdf['d2tr'] = [geom.distance(transit_uu) for geom in gdf['geometry']]
+		transit_gdf.to_file(f'../data/shp/{city}_{experiment}_transit.shp')
 
 	else:
 		print(f"Distance to transit stops not calculated for {experiment} of {city}")
