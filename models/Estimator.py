@@ -1,5 +1,9 @@
-import pandas as pd
+import geopandas as gpd
 import numpy as np
+import pandas as pd
+from tqdm import tqdm
+
+from tasks.dictionaries import *
 
 
 def pct_change(old, new):
@@ -44,7 +48,7 @@ class Estimator:
 			scenario = df.loc[(df['experiment'] == self.experiment) & (df['city'] == self.city), 'res_count'].sum()
 			return pct_change(baseline, scenario)
 
-	def get_change_proximity(self, radius=600):
+	def get_change_proximity(self, radius=400):
 		if self.experiment != 'E0':
 			df = self.df.copy()
 			chg_df = pd.DataFrame()
@@ -53,12 +57,15 @@ class Estimator:
 					df[col] = 0.05
 				i = len(chg_df)
 				# Get % of residents within 400m of each land use in the baseline
-				baseline = len(df[(df['experiment'] == 'E0') & (df['city'] == self.city) & (df[col] <= radius)]) / len(
-					df)
+				baseline = (
+					df[(df['experiment'] == 'E0') & (df['city'] == self.city) & (df[col] <= radius)]['res_count'].sum()/
+					df[(df['experiment'] == 'E0') & (df['city'] == self.city)]['res_count'].sum()
+				)
 				# Get % of residents within 400m of each land use in the scenario
-				scenario = len(
-					df[(df['experiment'] == self.experiment) & (df['city'] == self.city) & (df[col] <= radius)]) / len(
-					df)
+				scenario = (
+					df[(df['experiment'] == self.experiment) & (df['city'] == self.city) & (df[col] <= radius)]['res_count'].sum() /
+					df[(df['experiment'] == 'E0') & (df['city'] == self.city)]['res_count'].sum()
+				)
 				chg_df.loc[i, 'use'] = col
 				chg_df.loc[i, 'change'] = pct_change(baseline, scenario)
 			chg_df = chg_df.replace(
@@ -73,3 +80,20 @@ class Estimator:
 	def get_total_dwellings(self):
 		self.df['res_units'] = self.df['res_units'].astype(float)
 		return int(self.df[(self.df['experiment'] == self.experiment) & (self.df['city'] == self.city)]['res_units'].sum())
+
+
+if __name__ == '__main__':
+	buildings = gpd.read_file(f"{DIRECTORY}/{BUILDINGS_FILE}")
+
+	chg_df_all = pd.DataFrame()
+	for row, city in tqdm(enumerate(['Prince George', 'Victoria', 'Vancouver'])):
+		for col, experiment in enumerate(buildings['experiment'].unique()):
+			exp_df = buildings[(buildings['city'] == city) & (buildings['experiment'] == experiment)]
+			if (len(exp_df) > 0) & (experiment != 'E0'):
+				# Estimate data
+				estimator = Estimator(buildings, city, experiment)
+				chg_proximity = estimator.get_change_proximity(radius=400)
+				chg_proximity['city'] = city
+				chg_proximity['experiment'] = experiment
+				chg_df_all = pd.concat([chg_df_all, chg_proximity])
+	chg_df_all.to_csv('../data/csv/proximity_change.csv')

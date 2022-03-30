@@ -13,11 +13,15 @@ def get_distance_to_bike(gdf, city, experiment):
 	if LAYERS[city][experiment]['Roads'] != '':
 		roads_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=LAYERS[city][experiment]['Roads'])
 		if 'Bikeways' in roads_gdf.columns:
-			bike_uu = roads_gdf[roads_gdf['Bikeways'] == 1].unary_union
+			bike_gdf = roads_gdf[roads_gdf['Bikeways'] == 1].copy()
+			bike_uu = bike_gdf.unary_union
 		elif ('cycle_ocp' in roads_gdf.columns) & (experiment == 'E0'):
-			bike_uu = roads_gdf[roads_gdf['cycle_ocp'] == 'existing'].unary_union
+			bike_gdf = roads_gdf[roads_gdf['cycle_ocp'] == 'existing'].copy()
+			bike_uu = bike_gdf.unary_union
 		else:
-			bike_uu = roads_gdf[roads_gdf['cycle_2040'] == 1].unary_union
+			bike_gdf = roads_gdf[roads_gdf['cycle_2040'] == 1].copy()
+			bike_uu = bike_gdf.unary_union
+		bike_gdf.to_file(f'../data/shp/{city}_{experiment}_bike.shp')
 		gdf['d2bk'] = [geom.distance(bike_uu) for geom in gdf['geometry']]
 	else:
 		print(f"Distance to cycling lanes not calculated for {experiment} of {city}")
@@ -27,6 +31,7 @@ def get_distance_to_bike(gdf, city, experiment):
 def get_distance_to_transit(gdf, city, experiment):
 	if LAYERS[city][experiment]['Transit'] != '':
 		transit_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=LAYERS[city][experiment]['Transit'])
+		transit_gdf.to_file(f'../data/shp/{city}_{experiment}_transit.shp')
 		if ('bus_2020' in transit_gdf.columns) & (experiment == 'E0'):
 			transit_uu = transit_gdf[transit_gdf['bus_2020'] == 1].unary_union
 		elif 'freqt_2040' in transit_gdf.columns:
@@ -65,9 +70,9 @@ def rename_columns(gdf):
 if __name__ == '__main__':
 	gdfs = gpd.GeoDataFrame()
 
-	for city, experiments in BUILDINGS.items():
+	for city, experiments in LAYERS.items():
 		for experiment, layer in experiments.items():
-			exp_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=layer)
+			exp_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=layer['Buildings'])
 			exp_gdf['city'] = city
 			exp_gdf['experiment'] = experiment
 			exp_gdf['exp_name'] = get_experiment_name(city, experiment)
