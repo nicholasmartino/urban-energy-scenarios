@@ -64,7 +64,7 @@ class Estimator:
 				# Get % of residents within 400m of each land use in the scenario
 				scenario = (
 					df[(df['experiment'] == self.experiment) & (df['city'] == self.city) & (df[col] <= radius)]['res_count'].sum() /
-					df[(df['experiment'] == 'E0') & (df['city'] == self.city)]['res_count'].sum()
+					df[(df['experiment'] == self.experiment) & (df['city'] == self.city)]['res_count'].sum()
 				)
 				chg_df.loc[i, 'use'] = col
 				chg_df.loc[i, 'change'] = pct_change(baseline, scenario)
