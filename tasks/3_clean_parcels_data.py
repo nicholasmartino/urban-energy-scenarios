@@ -11,11 +11,11 @@ bld_ctr = bld_gdf.copy()
 bld_ctr['area'] = bld_ctr.area
 bld_ctr['geometry'] = bld_gdf.centroid.buffer(1)
 gdfs = gpd.GeoDataFrame()
-for city, experiments in PARCELS.items():
-	for experiment, layer in experiments.items():
+for city, experiments in LAYERS.items():
+	for experiment, layers in experiments.items():
 		exp_bld_ctr = bld_ctr.loc[(bld_ctr['city'] == city) & (bld_ctr['experiment'] == experiment)].copy()
 		exp_bld_ctr['volume'] = exp_bld_ctr['height'] * exp_bld_ctr['area']
-		exp_pcl = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=layer)
+		exp_pcl = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=layers['Parcels'])
 		exp_pcl.crs = 26910
 		exp_pcl['pcl_id_exp'] = exp_pcl.reset_index(drop=True).index
 		exp_pcl['city'] = city
@@ -27,8 +27,8 @@ for city, experiments in PARCELS.items():
 		gdfs = pd.concat([gdfs, exp_pcl])
 gdfs['pcl_id'] = gdfs.reset_index(drop=True).index
 
-for city, experiments in PARCELS.items():
-	for experiment, layer in experiments.items():
+for city, experiments in LAYERS.items():
+	for experiment, layers in experiments.items():
 		exp_bld_mask = ((bld_gdf['city'] == city) & (bld_gdf['experiment'] == experiment))
 		exp_pcl_mask = ((gdfs['city'] == city) & (gdfs['experiment'] == experiment))
 		exp_pcl = gdfs[exp_pcl_mask]
@@ -36,10 +36,8 @@ for city, experiments in PARCELS.items():
 		exp_bld_ctr = exp_bld.copy()
 		exp_bld_ctr['geometry'] = exp_bld.centroid.buffer(1)
 		bld_gdf['exp_name'] = get_experiment_name(city, experiment)
-		bld_gdf.loc[exp_bld_mask, 'pcl_id'] = exp_bld_ctr.loc[:, ['bld_id', 'geometry']]\
-			.sjoin(exp_pcl)\
-			.groupby('bld_id')\
-			.first()['pcl_id']
+		join = gpd.sjoin(exp_bld_ctr.loc[:, ['bld_id', 'geometry']], exp_pcl).groupby('bld_id').first()
+		bld_gdf.loc[exp_bld_mask, 'pcl_id'] = join['pcl_id']
 
 # Export files
 bld_gdf.to_file(f'{DIRECTORY}/buildings.shp')

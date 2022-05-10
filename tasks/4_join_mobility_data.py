@@ -19,9 +19,10 @@ for city, neighbourhood in NEIGHBOURHOODS.items():
 		exp_buildings = buildings_gdf[mask].copy()
 		exp_buildings['geometry'] = exp_buildings.centroid.buffer(0.1)
 		old_cols_mode = [f'{mode}_{experiment.lower()}_rf_{RS}_n' for mode in MODES]
-		join = exp_buildings\
-			.loc[:, ['bld_id', 'geometry']]\
-			.sjoin(mob_gdf.loc[:, old_cols_mode + ['geometry']])\
+		join = gpd.sjoin(
+			exp_buildings.loc[:, ['bld_id', 'geometry']],
+			mob_gdf.loc[:, old_cols_mode + ['geometry']]
+		)\
 			.groupby('bld_id', as_index=False)\
 			.mean()
 		for col, mode in zip(old_cols_mode, MODES):

@@ -96,7 +96,7 @@ MOBILITY = {
 
 # Explorer
 DIRECTORY = "/Volumes/SALA/Research/eLabs/50_projects/22_ESRI_Dashboard/Data"
-BUILDINGS_FILE = "buildings.shp"
+BUILDINGS_FILE = "buildings"
 
 # Machine learning
 DEPENDENT = [
@@ -138,11 +138,10 @@ LAYERS = {
 		},
 		"E7": {
 			"Strategy": "Prevailing Policy",
-			"Roads": "s_200107_cc_E0_2020_ROADS",
+			"Roads": "s_200214_cc_AT_2050_ROADS",
 			"Transit": "s_200225_cc_AT_2050_TRANSIT",
 			"Parcels": "s_200117_cc_E7_2050_PPOLICY_PRCLS",
 			"Buildings": "s_200316_jk_E7_2050_PPOLICY_BLDGS_tech_shell",
-
 		},
 		"E5": {
 			"Strategy": "Neighbourhood Center",
@@ -163,28 +162,28 @@ LAYERS = {
 		"E0": {
 			"Strategy": "Baseline",
 			"Roads": "E0_streets",
-			"Transit": "E0_streets",
+			"Transit": "E0_streets_GeneratePointsAlongLines",
 			"Parcels": "E0_2020_PRCLS",
 			"Buildings": "E0_2020_bldgs",
 		},
 		"E3": {
 			"Strategy": "Dispersed",
 			"Roads": "E0_streets",
-			"Transit": "E0_streets",
+			"Transit": "E0_streets_GeneratePointsAlongLines",
 			"Parcels": "E3_2040_D_PRCLS",
 			"Buildings": "E3_2040_D_bldgs",
 		},
 		"E5": {
 			"Strategy": "Corridor",
 			"Roads": "E0_streets",
-			"Transit": "E0_streets",
+			"Transit": "E0_streets_GeneratePointsAlongLines",
 			"Parcels": "E4_2040_COR_A_PRCLS",
 			"Buildings": "E5_2040_COR_B_bldgs",
 		},
 		"E6": {
 			"Strategy": "Transit-Oriented Development",
 			"Roads": "E0_streets",
-			"Transit": "E0_streets",
+			"Transit": "E0_streets_GeneratePointsAlongLines",
 			"Parcels": "E6_2040_TOD_B_PRCLS",
 			"Buildings": "E6_2040_TOD_B_bldgs",
 		},
