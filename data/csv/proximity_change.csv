@@ -1,0 +1,46 @@
+,use,change,change_sf,,city,experiment
+0,Open,0.0,0.0%,Open,Prince George,E7
+1,Civic,0.0,0.0%,Civic,Prince George,E7
+2,Comm.,0.0,0.0%,Comm.,Prince George,E7
+3,Bike,27.9,27.9%,Bike,Prince George,E7
+4,Transit,0.0,0.0%,Transit,Prince George,E7
+0,Open,-10.3,-10.3%,Open,Prince George,E5
+1,Civic,-2.5,-2.5%,Civic,Prince George,E5
+2,Comm.,3.5,3.5%,Comm.,Prince George,E5
+3,Bike,27.9,27.9%,Bike,Prince George,E5
+4,Transit,-0.0,-0.0%,Transit,Prince George,E5
+0,Open,-7.6,-7.6%,Open,Prince George,E6
+1,Civic,-3.5,-3.5%,Civic,Prince George,E6
+2,Comm.,3.8,3.8%,Comm.,Prince George,E6
+3,Bike,27.9,27.9%,Bike,Prince George,E6
+4,Transit,0.0,0.0%,Transit,Prince George,E6
+0,Open,0.9,0.9%,Open,Victoria,E3
+1,Civic,7.5,7.5%,Civic,Victoria,E3
+2,Comm.,2.0,2.0%,Comm.,Victoria,E3
+3,Bike,11.6,11.6%,Bike,Victoria,E3
+4,Transit,3.6,3.6%,Transit,Victoria,E3
+0,Open,-0.0,-0.0%,Open,Victoria,E1
+1,Civic,2.6,2.6%,Civic,Victoria,E1
+2,Comm.,15.1,15.1%,Comm.,Victoria,E1
+3,Bike,11.6,11.6%,Bike,Victoria,E1
+4,Transit,-2.4,-2.4%,Transit,Victoria,E1
+0,Open,1.1,1.1%,Open,Victoria,E2
+1,Civic,5.2,5.2%,Civic,Victoria,E2
+2,Comm.,2.4,2.4%,Comm.,Victoria,E2
+3,Bike,11.6,11.6%,Bike,Victoria,E2
+4,Transit,2.7,2.7%,Transit,Victoria,E2
+0,Open,-4.6,-4.6%,Open,Vancouver,E5
+1,Civic,37.1,37.1%,Civic,Vancouver,E5
+2,Comm.,10.8,10.8%,Comm.,Vancouver,E5
+3,Bike,-0.4,-0.4%,Bike,Vancouver,E5
+4,Transit,0.2,0.2%,Transit,Vancouver,E5
+0,Open,-10.7,-10.7%,Open,Vancouver,E6
+1,Civic,35.3,35.3%,Civic,Vancouver,E6
+2,Comm.,9.3,9.3%,Comm.,Vancouver,E6
+3,Bike,2.3,2.3%,Bike,Vancouver,E6
+4,Transit,0.2,0.2%,Transit,Vancouver,E6
+0,Open,3.3,3.3%,Open,Vancouver,E3
+1,Civic,26.7,26.7%,Civic,Vancouver,E3
+2,Comm.,-0.6,-0.6%,Comm.,Vancouver,E3
+3,Bike,0.3,0.3%,Bike,Vancouver,E3
+4,Transit,0.1,0.1%,Transit,Vancouver,E3

@@ -22,7 +22,7 @@ COLUMN_NAMES = {
 	"em_eqp_t": ["em_eqp_t"],
 	"em_dhw_t": ["em_dhw_t"],
 	"em_lgt_t": ["em_lgt_t"],
-	"ann_em_t": ["ann_em_t"]
+	"ann_em_t": ["ann_em_t"],
 }
 COLUMN_DESCRIPTIONS = {
 	"landuse": "Land Use",
@@ -270,3 +270,4 @@ PARCELS = {
 }
 """
 
+print("dictionaries imported")

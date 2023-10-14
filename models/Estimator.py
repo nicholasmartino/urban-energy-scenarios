@@ -83,7 +83,7 @@ class Estimator:
 
 
 if __name__ == '__main__':
-	buildings = gpd.read_file(f"{DIRECTORY}/{BUILDINGS_FILE}")
+	buildings = gpd.read_file(f"{DIRECTORY}/{BUILDINGS_FILE}.shp")
 
 	chg_df_all = pd.DataFrame()
 	for row, city in tqdm(enumerate(['Prince George', 'Victoria', 'Vancouver'])):

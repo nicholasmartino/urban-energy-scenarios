@@ -76,6 +76,7 @@ if __name__ == '__main__':
 	for city, experiments in LAYERS.items():
 		for experiment, layer in experiments.items():
 			exp_gdf = gpd.read_file(f'{DIRECTORY}/{city}.gdb', layer=layer['Buildings'])
+
 			exp_gdf['city'] = city
 			exp_gdf['experiment'] = experiment
 			exp_gdf['exp_name'] = get_experiment_name(city, experiment)

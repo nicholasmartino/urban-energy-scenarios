@@ -10,7 +10,7 @@ from models.Estimator import Estimator
 from models.Plotter import Plotter
 from store import *
 
-buildings = gpd.read_file(f"{DIRECTORY}/{BUILDINGS_FILE}")
+buildings = gpd.read_file(f"{DIRECTORY}/{BUILDINGS_FILE}.shp")
 buildings['area'] = buildings.area
 
 rows = []
